@@ -71,9 +71,11 @@ def part1(data: 'list[str]'):
 
   print(dist)
 
+import os
+
 data = []
 
-with open('input.txt', 'r') as file:
+with open(os.path.join(os.path.dirname(__file__), 'input.txt'), 'r') as file:
   for line in file.readlines():
     data.append(line.strip())
 
