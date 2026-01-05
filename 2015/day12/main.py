@@ -145,9 +145,9 @@ import os
 
 if __name__ == '__main__':
     data = []
-    with open(os.path.join(os.path.dirname(__file__), 'input.txt'), 'r') as file:
+    with open(os.path.join(os.path.dirname(__file__), 'input2.txt'), 'r') as file:
         for line in file.readlines():
             data.append(line.strip())
 
-    # print('part 1', part1(data[0]))
+    print('part 1', part1(data[0]))
     print('part 2', part2(data[0]))
