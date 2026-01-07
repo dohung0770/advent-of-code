@@ -78,28 +78,60 @@ def part2(containers: list[int], liters: int) -> int:
         int 
     '''
     
+    n = len(containers)
     inf = 10 ** 9
-    dp = [inf] * (liters + 1)
-    dp[0] = 0
+    # dp = [inf] * (liters + 1)
+    # dp[0] = 0
     
-    for c in containers:
-        for l in range(c, liters + 1):
-            if 1 + dp[l - c] < dp[l]:
-                dp[l] = 1 + dp[l - c]
+    # for c in containers:
+    #     for l in range(c, liters + 1):
+    #         if 1 + dp[l - c] < dp[l]:
+    #             dp[l] = 1 + dp[l - c]
 
-    min_containers = dp[liters]
+    # min_containers = dp[liters]
+    
+    
+    dp = [[inf] * (liters + 1) for _ in range(n + 1)]
+    for i in range(n + 1):
+        dp[i][0] = 0
+        
+    for i in range(1, n + 1):
+        c = containers[i - 1]
+        for l in range(c, liters + 1):
+            dp[i][l] = min(
+                dp[i - 1][l],
+                1 + dp[i - 1][l - c]
+            )
+    
+    min_containers = dp[n][liters]
     print('min containers = ', min_containers)
     
 
-    ways = [[0] * (liters + 1) for _ in range(min_containers + 1)]
-    ways[0][0] = 1
+    # ways = [[0] * (liters + 1) for _ in range(min_containers + 1)]
+    # ways[0][0] = 1
     
-    for c in containers:
-        for k in range(1, min_containers + 1):
-            for l in range(c, liters + 1):
-                ways[k][l] += ways[k - 1][l - c]
+    # for c in containers:
+    #     for k in range(1, min_containers + 1):
+    #         for l in range(c, liters + 1):
+    #             ways[k][l] += ways[k - 1][l - c]
                 
-    return ways[min_containers][liters]
+    # return ways[min_containers][liters]
+    
+    
+    def dfs(i: int, rem_containers: int, rem_liters: int) -> int:
+        if rem_liters == 0:
+            return 1 if rem_containers == 0 else 0
+        
+        if i == n or rem_containers == 0:
+            return 0
+        
+        tot = dfs(i + 1, rem_containers, rem_liters)
+        if containers[i] <= rem_liters:
+            tot += dfs(i + 1, rem_containers - 1, rem_liters - containers[i])
+            
+        return tot
+            
+    return dfs(0, min_containers, liters)
 
 
 import os
