@@ -28,6 +28,8 @@ Your puzzle input is 33100000.
 
 
 
+
+
 --- Part Two ---
 The Elves decide they don't want to visit an infinite number of houses. Instead, each Elf will stop after delivering presents to 50 houses. To make up for it, they decide to deliver presents equal to eleven times their number at each house.
 
@@ -36,15 +38,14 @@ With these changes, what is the new lowest house number of the house to get at l
 '''
 
 import math
-from functools import cache
 
 
 def part1(gifts: int) -> int:
     '''
-    Return the least house number that receives at least 'gifts' gifts from the Elves.
+    Return the least house number that receives at least 'gifts' presents from the Elves.
 
     Parameters:
-        gifts (int): least number of gifts
+        gifts (int): least number of presents
     
     Returns:
         int:    
@@ -58,7 +59,6 @@ def part1(gifts: int) -> int:
     
     num = 2
     
-    @cache
     def count_gifts(curr: int) -> int:
         cnt = 0
 
@@ -81,9 +81,55 @@ def part1(gifts: int) -> int:
         num += 1
 
 
-def part2():
-    pass
+def part2(gifts: int):
+    '''
+    Same with part 1, except now the Elves only deliver gifts to 50 houses with 11 presents each house.
+    Return the least house number that receive at least 'gifts' presents.
+
+    Parameters:
+        gifts (int): least number of presents.
+    
+    Returns:
+        int: least house number that receive at least the input presents.
+    '''
+    
+    # Now each Elf gives 11 times of his or her number of gifts to each house
+    if gifts <= 11:
+        return 1
+    
+    num = math.ceil(gifts / 11)
+    
+    def count_gifts(curr: int) -> int:
+        cnt = 0
+        
+        start = 1
+        print('start = ', start)
+
+        for d in range(start, math.floor(math.sqrt(curr)) + 1):
+            if curr % d == 0:
+                cnt += d
+                
+                compl = curr // d
+                print(d, compl)
+                if compl >= start and compl != d:
+                    cnt += compl
+                    
+        return cnt * 11
+    
+    print(count_gifts(gifts))
+    return 0
+    
+    while True:
+        tot_gifts = count_gifts(num)
+                
+        print(f'House {num} got {tot_gifts * 11} presents')
+                
+        if tot_gifts >= gifts:
+            return num
+        
+        num += 1
 
 
 if __name__ == '__main__':
-    print('part 1', part1(33100000)) # 776160
+    # print('part 1', part1(33100000)) # 776160
+    print('part 2', part2(33100000))
